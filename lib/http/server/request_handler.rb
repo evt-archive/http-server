@@ -12,7 +12,7 @@ module HTTP
       module Call
         def call(*args)
           instance = build(*args)
-          instance.call
+          instance.()
         end
       end
 
