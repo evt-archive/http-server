@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "http-server"
-  s.version     = "0.0.0"
+  s.version     = "0.1.0"
   s.licenses    = ["MIT"]
   s.summary     = "Simple HTTP Server using http-protocol"
   s.authors     = ["Nathan Ladd"]
