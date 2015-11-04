@@ -1,6 +1,7 @@
 require "http/protocol"
 
 require "http/server/server"
+require "http/server/settings"
 
 require "http/server/client"
 require "http/server/response"
