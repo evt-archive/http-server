@@ -14,6 +14,9 @@ module HTTP
       cls.extend Build
       cls.extend Handlers
 
+      cls.setting :bind_address
+      cls.setting :port
+
       cls.send :const_set, :ProcessHostIntegration, ProcessHostIntegration
     end
 
@@ -26,8 +29,8 @@ module HTTP
 
     module Build
       def build
-        server_connection = Connection::Server.build "127.0.0.1", 9999
-        instance = new server_connection
+        instance = new
+        Settings.instance.set instance
         Telemetry::Logger.configure instance
         instance
       end
@@ -37,12 +40,6 @@ module HTTP
       def handlers
         @handlers ||= {}
       end
-    end
-
-    attr_reader :server_connection
-
-    def initialize(server_connection)
-      @server_connection = server_connection
     end
 
     def start
@@ -57,8 +54,12 @@ module HTTP
 
     def serve_client(client_connection)
       handlers = self.class.handlers
-      client = Client.new client_connection, handlers
+      client = Client.build client_connection, handlers
       client.respond
+    end
+
+    def server_connection
+      @server_connection ||= Connection::Server.build bind_address, port
     end
 
     module ProcessHostIntegration

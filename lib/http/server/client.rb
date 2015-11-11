@@ -4,9 +4,17 @@ module HTTP
       attr_reader :connection
       attr_reader :handlers
 
+      dependency :logger, Telemetry::Logger
+
       def initialize(connection, handlers)
         @connection = connection
         @handlers = handlers
+      end
+
+      def self.build(*arguments)
+        instance = new *arguments
+        Telemetry::Logger.configure instance
+        instance
       end
 
       def respond
@@ -21,7 +29,7 @@ module HTTP
         path = request.path
         logger.debug "Path: #{path}"
 
-        response = Response.build connection, request.action, request.headers
+        response = Response.build connection, request.headers
         response["Connection"] = "close"
 
         handlers.each do |matcher, handler|
@@ -33,7 +41,7 @@ module HTTP
           return
         end
 
-        NotFound.(response)
+        RequestHandler::NotFound.(response)
       end
     end
   end
