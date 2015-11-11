@@ -1,3 +1,4 @@
+require "settings"
 require "http/protocol"
 
 require "http/server/server"
