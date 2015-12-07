@@ -1,10 +1,9 @@
 module HTTP
   module Server
-    UUID_MATCHER = %q{[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$}
-
     REASON_PHRASES = {
-      200 => "OK",
-      404 => "Not Found",
+      200 => 'OK',
+      201 => 'Created',
+      404 => 'Not Found',
     }
 
     def self.included(cls)
@@ -13,6 +12,7 @@ module HTTP
       cls.extend AddHandler
       cls.extend Build
       cls.extend Handlers
+      cls.extend HTTPMethods
 
       cls.setting :bind_address
       cls.setting :port
@@ -21,10 +21,19 @@ module HTTP
     end
 
     module AddHandler
-      def add_handler(matcher, &handler)
-        handlers[matcher] = handler
+      def add_handler(http_method, matcher, handler)
+        handlers[http_method][matcher] = handler
       end
-      alias_method :get, :add_handler
+    end
+
+    module HTTPMethods
+      def get(matcher, &handler)
+        handlers['GET'.freeze][matcher] = handler
+      end
+
+      def post(matcher, &handler)
+        handlers['POST'.freeze][matcher] = handler
+      end
     end
 
     module Build
@@ -38,17 +47,16 @@ module HTTP
 
     module Handlers
       def handlers
-        @handlers ||= {}
+        @handlers ||= Hash.new do |hash, http_method|
+          hash[http_method] = {}
+        end
       end
     end
 
     def start
-      running = true
-
-      while running
-        server_connection.accept do |client_connection|
-          serve_client client_connection
-        end
+      loop do
+        client_connection = server_connection.accept
+        serve_client client_connection
       end
     end
 
@@ -59,12 +67,12 @@ module HTTP
     end
 
     def server_connection
-      @server_connection ||= Connection::Server.build bind_address, port
+      @server_connection ||= Connection.server port
     end
 
     module ProcessHostIntegration
-      def change_connection_policy(policy)
-        server_connection.policy = policy
+      def change_connection_scheduler(scheduler)
+        server_connection.scheduler = scheduler
       end
     end
   end

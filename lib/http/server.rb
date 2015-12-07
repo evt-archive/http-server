@@ -1,10 +1,11 @@
-require "settings"
-require "http/protocol"
+require 'settings' ; Settings.activate
+require 'http/protocol'
 
-require "http/server/server"
-require "http/server/settings"
+require 'http/server/server'
+require 'http/server/settings'
 
-require "http/server/client"
-require "http/server/response"
-require "http/server/request_handler"
-require "http/server/request_handler/not_found"
+require 'http/server/client'
+require 'http/server/response'
+require 'http/server/request'
+require 'http/server/request_handler'
+require 'http/server/request_handler/not_found'

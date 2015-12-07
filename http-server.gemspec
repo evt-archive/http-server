@@ -14,11 +14,13 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = '>= 2.2.3'
 
+  s.add_runtime_dependency 'connection'
   s.add_runtime_dependency 'http-protocol'
   s.add_runtime_dependency 'settings'
 
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'minitest-spec-context'
+  s.add_development_dependency 'process_host'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'runner'
 end

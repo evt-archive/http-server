@@ -23,21 +23,23 @@ module HTTP
         builder << connection.gets until builder.finished_headers?
         logger.debug "Server has read request headers"
 
-        request = builder.message
+        raw_request = builder.message
+        request = Request.build raw_request, connection
         logger.data request
 
         path = request.path
-        logger.debug "Path: #{path}"
 
         response = Response.build connection, request.headers
         response["Connection"] = "close"
 
-        handlers.each do |matcher, handler|
+        http_method = raw_request.action
+
+        handlers[http_method].each do |matcher, handler|
           match = matcher.match path
           next unless match
 
           path_params = match.to_a.tap &:shift
-          handler.(response, path_params)
+          handler.(response, path_params, request)
           return
         end
 
