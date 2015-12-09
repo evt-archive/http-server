@@ -1,4 +1,5 @@
 require 'settings' ; Settings.activate
+require 'http/commands'
 require 'http/protocol'
 
 require 'http/server/server'

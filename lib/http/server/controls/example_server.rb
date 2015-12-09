@@ -31,7 +31,7 @@ module HTTP
         end
 
         def self.run(port=nil, &block)
-          port ||= 9000
+          port ||= 8000
 
           server = ExampleServer.new
           Telemetry::Logger.configure server
