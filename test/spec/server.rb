@@ -6,17 +6,15 @@ describe 'Server' do
 
     HTTP::Server::Controls::ExampleServer.run do |port, scheduler|
       uri = URI::HTTP.build :host => 'localhost', :port => port, :path => '/countdown'
-      connector = HTTP::Commands::Connect.build uri
+      connection = HTTP::Commands::Connect.(uri, scheduler: scheduler)
 
       while counter > 0
         entity = { 'counter' => counter }
         json = JSON.pretty_generate entity
 
-        connection = connector.connect scheduler
         response = HTTP::Commands::Post.(json, uri, connection: connection)
         fail unless response.status_code == 201
 
-        connection = connector.connect scheduler
         response = HTTP::Commands::Get.(uri, connection: connection)
         entity = JSON.parse response.body
 
