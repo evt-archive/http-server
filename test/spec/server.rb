@@ -2,7 +2,7 @@ require_relative './spec_init'
 
 describe 'Server' do
   specify 'Request and Response' do
-    counter = 1
+    counter = (ENV['COUNTER'] || '1').to_i
 
     HTTP::Server::Controls::ExampleServer.run do |port, scheduler|
       uri = URI::HTTP.build :host => 'localhost', :port => port, :path => '/countdown'
