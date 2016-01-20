@@ -3,7 +3,7 @@ module HTTP
     REASON_PHRASES = {
       200 => 'OK',
       201 => 'Created',
-      404 => 'Not Found',
+      404 => 'Not Found'
     }
 
     def self.included(cls)
