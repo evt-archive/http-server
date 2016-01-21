@@ -38,7 +38,7 @@ module HTTP
           server.bind_address = '127.0.0.1'
           server.port = port
 
-          HTTP::Commands::Controls::RunServer.(server, port: port, &block)
+          RunServer.(server, port: port, &block)
         end
       end
     end
