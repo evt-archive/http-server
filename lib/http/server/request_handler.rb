@@ -17,11 +17,11 @@ module HTTP
       end
 
       def connection
-        @response.connection
+        response.connection
       end
 
       def request
-        @response.request
+        response.request
       end
     end
   end
