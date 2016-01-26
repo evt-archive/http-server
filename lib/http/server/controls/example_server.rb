@@ -5,29 +5,29 @@ module HTTP
         include HTTP::Server
 
         singleton_class.class_eval do
-          attr_accessor :counter
+          attr_accessor :iterations
         end
 
         get %r{^/countdown$} do |response, *|
-          entity = { 'counter' => counter }
+          entity = { 'iterations' => iterations }
           json = JSON.pretty_generate entity
 
           response.deliver 200, json, 'application/json'
 
           # This allows tests to end naturally
-          raise StopIteration if counter.zero?
+          raise StopIteration if iterations.zero?
         end
 
         post %r{^/countdown$} do |response, _, request|
           json = request.read_body
           entity = JSON.parse json
-          counter = entity['counter']
+          iterations = entity['iterations']
 
-          self.counter = counter - 1
+          self.iterations = iterations - 1
 
           response.deliver 201
 
-          __logger.pass "Returning #{self.counter.inspect}"
+          __logger.pass "Returning #{self.iterations.inspect}"
         end
 
         def self.run(port=nil, &block)
