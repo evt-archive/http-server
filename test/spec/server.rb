@@ -1,7 +1,7 @@
 require_relative './spec_init'
 
-describe 'Server' do
-  specify 'Request and Response' do
+context 'Server' do
+  test 'Request and Response' do
     iterations = (ENV['ITERATIONS'] || '1').to_i
 
     HTTP::Server::Controls::ExampleServer.run do |port, scheduler|
