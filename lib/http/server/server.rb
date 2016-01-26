@@ -18,6 +18,8 @@ module HTTP
       cls.setting :port
 
       cls.send :const_set, :ProcessHostIntegration, ProcessHostIntegration
+
+      cls.send :attr_accessor, :ssl_context
     end
 
     module AddHandler
@@ -37,8 +39,9 @@ module HTTP
     end
 
     module Build
-      def build
+      def build(ssl_context=nil)
         instance = new
+        instance.ssl_context = ssl_context
         Settings.instance.set instance
         Telemetry::Logger.configure instance
         instance
@@ -67,7 +70,7 @@ module HTTP
     end
 
     def server_connection
-      @server_connection ||= Connection.server port
+      @server_connection ||= Connection.server port, ssl_context: ssl_context
     end
 
     module ProcessHostIntegration
