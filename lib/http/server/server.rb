@@ -71,7 +71,7 @@ module HTTP
     end
 
     def server_connection
-      @server_connection ||= Connection.server port, ssl_context: ssl_context
+      @server_connection ||= Connection::Server.build port, ssl_context: ssl_context
     end
 
     def stop
