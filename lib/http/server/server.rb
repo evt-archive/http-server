@@ -20,6 +20,7 @@ module HTTP
       cls.send :const_set, :ProcessHostIntegration, ProcessHostIntegration
 
       cls.send :attr_accessor, :ssl_context
+      cls.send :attr_accessor, :stopped
     end
 
     module AddHandler
@@ -57,7 +58,7 @@ module HTTP
     end
 
     def start
-      loop do
+      until stop?
         client_connection = server_connection.accept
         serve_client client_connection
       end
@@ -65,12 +66,20 @@ module HTTP
 
     def serve_client(client_connection)
       handlers = self.class.handlers
-      client = Client.build client_connection, handlers
+      client = Client.build client_connection, handlers, self
       client.respond
     end
 
     def server_connection
       @server_connection ||= Connection.server port, ssl_context: ssl_context
+    end
+
+    def stop
+      self.stopped = true
+    end
+
+    def stop?
+      stopped
     end
 
     module ProcessHostIntegration
