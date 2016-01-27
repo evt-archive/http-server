@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'http-server'
-  s.version     = '0.0.2.2'
+  s.version     = '0.0.2.3'
   s.summary     = 'Simple HTTP Server using http-protocol'
   s.description = ' '
 
