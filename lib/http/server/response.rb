@@ -26,7 +26,7 @@ module HTTP
       end
 
       def deliver(status_code, message_body = "", content_type = nil)
-        logger.trace "Server is sending response"
+        logger.opt_trace "Server is sending response"
 
         reason_phrase = REASON_PHRASES.fetch status_code
         response = HTTP::Protocol::Response.new status_code, reason_phrase
@@ -34,17 +34,17 @@ module HTTP
         response["Content-Type"] = content_type if content_type
 
         if message_body.empty?
-          logger.data response
+          logger.opt_data response
           connection.write response
         else
           response["Content-Length"] = message_body.size
-          logger.data response
-          logger.data message_body
+          logger.opt_data response
+          logger.opt_data message_body
           connection.write response
           connection.write message_body
         end
 
-        logger.debug "Server sent response"
+        logger.opt_debug "Server sent response"
       end
     end
   end

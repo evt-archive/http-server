@@ -3,12 +3,14 @@ module HTTP
     class Client
       attr_reader :connection
       attr_reader :handlers
+      attr_reader :server
 
       dependency :logger, Telemetry::Logger
 
-      def initialize(connection, handlers)
+      def initialize(connection, handlers, server)
         @connection = connection
         @handlers = handlers
+        @server = server
       end
 
       def self.build(*arguments)
@@ -19,13 +21,13 @@ module HTTP
 
       def respond
         builder = ::HTTP::Protocol::Request::Builder.build
-        logger.trace "Server is reading request headers"
+        logger.opt_trace "Server is reading request headers"
         builder << connection.gets until builder.finished_headers?
-        logger.debug "Server has read request headers"
+        logger.opt_debug "Server has read request headers"
 
         raw_request = builder.message
         request = Request.build raw_request, connection
-        logger.data request
+        logger.opt_data request
 
         path = request.path
 
@@ -39,7 +41,7 @@ module HTTP
           next unless match
 
           path_params = match.to_a.tap &:shift
-          handler.(response, path_params, request)
+          handler.(response, path_params, request, server)
           return
         end
 
