@@ -9,9 +9,6 @@ require_relative '../init.rb'
 
 require 'test_bench'; TestBench.activate
 
-require 'process_host'
-require 'process_host/controls'
-
 require 'http/server/controls'
 
 Telemetry::Logger::AdHoc.activate
