@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
-  s.name        = 'http-server'
-  s.version     = '0.0.2.4'
-  s.summary     = 'Simple HTTP Server using http-protocol'
+  s.name = 'http-server'
+  s.version = '0.1.0.0'
+  s.summary = 'Simple HTTP Server using http-protocol'
   s.description = ' '
 
   s.authors = ['The Eventide Project']
